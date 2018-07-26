@@ -147,6 +147,34 @@ RUN sed -i "s/xdebug.remote_autostart=0/xdebug.remote_autostart=1/" /etc/php/7.2
     sed -i "s/xdebug.cli_color=0/xdebug.cli_color=1/" /etc/php/7.2/cli/conf.d/xdebug.ini
 
 
+USER devuser
+
+ENV NVM_DIR /home/devuser/.nvm
+ENV NPM_REGISTRY https://registry.npmjs.org
+
+# Install nvm (A Node Version Manager)
+RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash \
+        && . $NVM_DIR/nvm.sh \
+        && nvm install node \
+        && nvm use node \
+        && nvm alias node \
+	&& npm config set registry ${NPM_REGISTRY} \
+	&& npm install -g @vue/cli
+
+RUN echo "" >> ~/.bashrc && \
+    echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bashrc && \
+    echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm' >> ~/.bashrc
+
+
+USER root
+
+RUN echo "" >> ~/.bashrc && \
+    echo 'export NVM_DIR="/home/devuser/.nvm"' >> ~/.bashrc && \
+    echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm' >> ~/.bashrc
+
+ENV PATH $PATH:$NVM_DIR/versions/node/vnode/bin
+
+RUN . ~/.bashrc && npm config set registry ${NPM_REGISTRY} 
 
 # Last
 
