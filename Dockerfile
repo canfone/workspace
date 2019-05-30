@@ -24,7 +24,7 @@ RUN apt-get update && \
         php7.3-json \
         php7.3-xml \
         php7.3-mbstring \
-        php7.3-mysql \
+        php7.3-mysqli \
         php7.3-pgsql \
         php7.3-sqlite \
         php7.3-sqlite3 \
@@ -49,6 +49,7 @@ RUN apt-get update && \
         zlib1g-dev \
         bzip2 \
         libbz2-dev \
+        unzip \
     && apt-get clean
 
 RUN curl -s http://getcomposer.org/installer | php && \
